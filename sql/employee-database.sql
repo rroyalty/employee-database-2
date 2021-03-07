@@ -9,34 +9,29 @@
 
 CREATE TABLE `department` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `employee` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `id_role` bigint DEFAULT NULL,
-  `last_name` varchar(30) DEFAULT NULL,
-  `first_name` varchar(30) DEFAULT NULL,
   `id_manager` bigint DEFAULT NULL,
+  `id_role` bigint NOT NULL,
+  `last_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `first_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `role` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `title` varchar(30) DEFAULT NULL,
-  `salary` decimal(19,2) DEFAULT NULL,
-  `id_department` bigint DEFAULT NULL,
+  `id_department` bigint NOT NULL,
+  `title` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `salary` decimal(19,2) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
-
 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
