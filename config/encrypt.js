@@ -16,7 +16,6 @@ const generateHash = (username, password) => {
                 console.log('Config File Saved!');
                 process.exit(1);
             })
-
         });
     });
 }
@@ -30,12 +29,21 @@ const inputCredentials = () => {
             message: 'What is your mySQL username?'
             },
             {
-            type: 'input',
-            name: 'password',
+            type: 'password',
+            name: 'password1',
             message: 'What is your mySQL password?'
+            },
+            {
+            type: 'password',
+            name: 'password2',
+            message: 'Again, what is your mySQL password?'
             }
         ]).then((answer) => {
-                generateHash(answer.username, answer.password);
+                if(answer.password1 !== answer.password2) {
+                    console.log(`Passwords do not match. Please try again.\n`)
+                    inputCredentials();
+                }
+                generateHash(answer.username, answer.password1);
             });
 }
 

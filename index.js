@@ -7,23 +7,29 @@ const bcrypt = require('bcrypt');
 
 // General Menu
 
-const generalMenu = () => {
-    console.log(`Welcome to Ryan's Employee Database!`)
-    inquirer
-        .promopt({
-            name: 'selection',
-            type: 'rawlist',
-            message: 'What would you like to do?',
-            choices: [
-                'View Deparments',
-                'View Roles',
-                'View Employees',
-                'Add Department',
-                'Add Role',
-                'Add Employee',
-                
-        })
-}
+// const generalMenu = () => {
+//     console.log(`Welcome to Ryan's Employee Database!`)
+//     inquirer
+//         .promopt({
+//             name: 'selection',
+//             type: 'rawlist',
+//             message: 'What database category are you working with?',
+//             choices: [
+//                 'View Deparments',
+//                 'View Roles',
+//                 'View Employees',
+//                 'Add Department',
+//                 'Add Role',
+//                 'Add Employee',
+//                 'Delete Department',
+//                 'Delete Role',
+//                 'Delete Employee',
+//                 'Change Employee Role',
+//                 'Assign Manager',
+
+
+//             ]})
+// }
 
 // Compare login credentials to stored config file.
 const compareHash = (username, password) => {
@@ -70,7 +76,7 @@ const access = () => {
             message: 'What is your mySQL username?'
             },
             {
-            type: 'input',
+            type: 'password',
             name: 'password',
             message: 'What is your mySQL password?'
             }
