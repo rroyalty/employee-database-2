@@ -1,0 +1,23 @@
+{
+  "name": "employee-database-2",
+  "version": "1.0.0",
+  "description": "Employee Database Program using actual SQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rroyalty/employee-database-2.git"
+  },
+  "author": "Ryan Royalty",
+  "license": "SEE LICENCE IN <LICENSE>",
+  "bugs": {
+    "url": "https://github.com/rroyalty/employee-database-2/issues"
+  },
+  "homepage": "https://github.com/rroyalty/employee-database-2#readme",
+  "dependencies": {
+    "inquirer": "^8.0.0",
+    "mysql": "^2.18.1"
+  }
+}
