@@ -1,88 +1,157 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const credentials = require('./config/config.json');
+const config = require('./config/config.json');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
 
-// General Menu
-
-// const generalMenu = () => {
-//     console.log(`Welcome to Ryan's Employee Database!`)
-//     inquirer
-//         .promopt({
-//             name: 'selection',
-//             type: 'rawlist',
-//             message: 'What database category are you working with?',
-//             choices: [
-//                 'View Deparments',
-//                 'View Roles',
-//                 'View Employees',
-//                 'Add Department',
-//                 'Add Role',
-//                 'Add Employee',
-//                 'Delete Department',
-//                 'Delete Role',
-//                 'Delete Employee',
-//                 'Change Employee Role',
-//                 'Assign Manager',
-
-
-//             ]})
-// }
 
 // Compare login credentials to stored config file.
 const compareHash = (username, password) => {
-    bcrypt.compare(username, credentials.username, function(err, result) {
+    bcrypt.compare(username, config.username, (err, result) => {
         if (!result) {
             console.log("Bad username.");
-            process.exit(0);
-        }
-        bcrypt.compare(password, credentials.password, function(err, result) {
-            if (!result) {
-                console.log("Bad password.");
-                process.exit(0);
-            }
-
-            const connection = mysql.createConnection({
-                host: 'localhost',
-              
-                // Your port; if not 3306
-                port: 3306,
-              
-                // Your username
-                user: username,
-              
-                // Your password
-                password: password,
-                database: 'employee-database',
-              });
-
-            connection.connect((err) => {
-            if (err) throw err;
-            console.log("connection to database successful.\n");
-            });
-        })
-    })
+            process.exit(1);
+        }});
+    bcrypt.compare(password, config.password, (err, result) => {
+        if (!result) {
+            console.log("Bad password.");
+            process.exit(1);
+        }});
 }
 
 // Login
-const access = () => {
-    inquirer
+const access = async () => {
+    return await inquirer
         .prompt([
             {
-            type: 'input',
-            name: 'username',
-            message: 'What is your mySQL username?'
+                type: 'input',
+                name: 'username',
+                message: 'What is your mySQL username?'
             },
             {
-            type: 'password',
-            name: 'password',
-            message: 'What is your mySQL password?'
+                type: 'password',
+                name: 'password',
+                message: 'What is your mySQL password?'
             }
         ]).then((answer) => {
-                compareHash(answer.username, answer.password);
-            });
-}
+                compareHash(answer.username, answer.password)
+                return answer;
+            })
+};
 
-access();
+access().then((credentials) => {
+        const connection = mysql.createConnection({
+            host: 'localhost',
+            port: 3306,
+            user: credentials.username,
+            password: credentials.password,
+            database: 'employee-database',
+        });
+
+        connection.connect((err) => {
+            if (err) throw err;
+            console.log("connection to database successful.\n");
+            generalMenu();
+        });
+
+        const viewDB = (param) => {
+                let query = `SELECT * FROM ${param}`;
+                connection.query(query, (err, res) => {
+                    if (!res[0] === false) {
+                        let columnMap = Object.keys(res[0]).filter((ele) => ele.substring(0,3) === "id_");
+                        columnMap = columnMap.map((ele) => ele.split("_")[1]);
+                        columnMap.forEach((ele) => {
+                            query = `${query} LEFT JOIN ${ele} ON ${param}.id_${ele} = ${ele}.id`
+                        })
+                        connection.query(query, (err, res) => {
+                            res.forEach((ele) => {
+                                Object.entries(ele).forEach((entry) => {
+                                    if (entry[0].substring(0,2) === "id") delete ele[entry[0]];
+                                })
+                            });
+                            console.table(res);
+                            generalMenu();
+                        })
+                    }
+            });
+        };
+
+        const addDB = (param) => {
+            switch(param) {
+                case `Employee`:
+                    let query = `SELECT * FROM ${param}`;
+                    connection.query(query, (err, res) => {})
+                break;
+                case `Role`:
+                break;
+                case `Department`:
+                break;
+            }
+            
+        }
+
+        const removeDB = (param) => {
+            switch(param) {
+                case `Employee`:
+                break;
+                case `Role`:
+                break;
+                case `Department`:
+                break;
+            }
+            
+        }
+
+        const selectionRouting = (answer) => {
+            const split = answer.selection.split(" ");
+
+            switch(split[0]) {
+                case `View`:
+                    viewDB(split[1]);
+                break;
+                case `Add`:
+                    addDB(split[1]);
+                break;
+                case `Remove`:
+                    removeDB(split[1]);
+                break;
+            }
+        } 
+
+        // General Menu
+        const generalMenu = () => {
+            console.log(`Welcome to Ryan's Employee Database!`)
+            inquirer
+                .prompt({
+                    pageSize: 22
+                    ,
+                    name: 'selection',
+                    type: 'rawlist',
+                    message: 'What would you like to do?',
+                    choices: [
+                        new inquirer.Separator(`\n==== Employees ====`),
+                        'View Employee',
+                        'Add Employee',
+                        'Remove Employee',
+                        'Change Role',
+                        'Assign to Manager',
+                        new inquirer.Separator(`--------`),
+                        'Make Employee a Manager',
+                        'Remove Manager Status',
+                        new inquirer.Separator(`\n==== Roles ====`),
+                        'View Role',
+                        'Add Role',
+                        'Remove Role',
+                        new inquirer.Separator(`\n==== Departments ====`),
+                        'View Department',
+                        'Add Department',
+                        'Remove Department',
+                        // new inquirer.Separator(`---- Other ----`),
+                        // 'View Utilized Budget'
+                    ]}).then((answer) => {
+                        selectionRouting(answer);
+                    });
+        }
+})
+
