@@ -80,8 +80,6 @@ access().then((credentials) => {
         const addDB = (param) => {
             switch(param) {
                 case `Employee`:
-                    let query = `SELECT * FROM ${param}`;
-                    connection.query(query, (err, res) => {})
                 break;
                 case `Role`:
                 break;
