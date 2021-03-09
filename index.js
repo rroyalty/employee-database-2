@@ -157,7 +157,7 @@ access().then((credentials) => {
                     choices: employeeMap
                 }).then((answer) => {
                     const employee = answer.name;
-                    connection.query(`SELECT Role fROM role`, (err, res) => {
+                    connection.query(`SELECT Role FROM role`, (err, res) => {
                         if (err) throw err;
                         const roleMap = res.map((ele) => ele.Role);
                         inquirer
@@ -165,7 +165,7 @@ access().then((credentials) => {
                                 pageSize: 5,
                                 name: 'role',
                                 type: 'list',
-                                message: `Whose role would you like to change ${employee} to?`,
+                                message: `What role would you like to change ${employee} to?`,
                                 choices: roleMap
                             }).then((answer) => {
                                 const role = answer.role;
