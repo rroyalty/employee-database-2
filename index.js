@@ -101,15 +101,29 @@ access().then((credentials) => {
     }
 
     const removeDB = (param) => {
-        switch(param) {
-            case `Employee`:
-            break;
-            case `Role`:
-            break;
-            case `Department`:
-            break;
+        let select = param;
+        switch (param) {
+            case 'Employee':
+                select = `CONCAT(first_name, " " , last_name)`;
+            break
         }
-        
+        connection.query(`SELECT ${select} AS ${param} FROM ${param}`, (err, res) => {
+            const columnMap = res.map((ele) => ele[param]);
+            console.log(`==================================================================\nBe Careful! Deleting entries will cascade to related tables!!\n==================================================================\n`);
+            inquirer
+                .prompt({
+                    pageSize: 5,
+                    name: 'selection',
+                    type: 'list',
+                    message: 'Which entry would you like to delete?',
+                    choices: columnMap
+                }).then((answer) => {
+                    connection.query(`DELETE FROM ${param} WHERE ${select} = ?`, answer.selection, (err, res) => {
+                        console.log(res);
+                        generalMenu();
+                    });
+                })
+        })
     }
 
     const selectionRouting = (answer) => {
