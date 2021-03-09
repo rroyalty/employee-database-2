@@ -88,11 +88,13 @@ access().then((credentials) => {
                 connection.query(`SELECT id FROM ${firstKey[1]} WHERE ${firstKey[1]} = ?`, Object.values(answer)[0], (err, res) => {
                     answer[Object.keys(answer)[0]] = res[0].id;
                     connection.query(`INSERT INTO ${param} SET ?`, answer, (err, res) => { 
+                        console.log(`Entry Added!\n`)
                         generalMenu();
                     })
                 })
             } else {
                 connection.query(`INSERT INTO ${param} SET ?`, answer, (err, res) => { 
+                    console.log(`Entry Added!\n`)
                     generalMenu();
                 })
             }
@@ -118,9 +120,45 @@ access().then((credentials) => {
                     choices: columnMap
                 }).then((answer) => {
                     connection.query(`DELETE FROM ${param} WHERE ${select} = ?`, answer.selection, (err, res) => {
-                        console.log(res);
+                        console.log(`Entry Deleted!\n`)
                         generalMenu();
                     });
+                })
+        })
+    }
+
+    const changeRole = () => {
+        connection.query(`SELECT CONCAT(first_name, " " , last_name) AS Employee FROM employee`, (err, res) => {
+            const employeeMap = res.map((ele) => ele.Employee);
+            inquirer
+                .prompt({
+                    pageSize: 5,
+                    name: 'name',
+                    type: 'list',
+                    message: 'Which employee is changing roles?',
+                    choices: employeeMap
+                }).then((answer) => {
+                    const employee = answer.name;
+                    connection.query(`SELECT Role fROM role`, (err, res) => {
+                        const roleMap = res.map((ele) => ele.Role);
+                        inquirer
+                            .prompt({
+                                pageSize: 5,
+                                name: 'role',
+                                type: 'list',
+                                message: `Whose role would you like to change ${employee} to?`,
+                                choices: roleMap
+                            }).then((answer) => {
+                                const role = answer.role;
+                                connection.query(`SELECT id fROM role WHERE Role = ?`, role, (err, res) => {
+                                    const roleID = res[0].id;
+                                    connection.query(`UPDATE Employee SET id_role = ? WHERE CONCAT(first_name, " " , last_name) = ?`, [roleID, employee], (err, res) => {
+                                        console.log(`Role updated!\n`);
+                                        generalMenu();
+                                    })
+                                })
+                            })
+                    })
                 })
         })
     }
@@ -138,6 +176,19 @@ access().then((credentials) => {
             case `Remove`:
                 removeDB(split[1]);
             break;
+            case `Change`:
+                changeRole();
+            break;
+            // case `Assign`:
+            // break;
+            // case `Make`:
+            // break;
+            // case `Revoke`:
+            // break;
+            // case `List`:
+            // break;
+            // case `Generate`:
+            // break;
         }
     } 
 
@@ -169,8 +220,10 @@ access().then((credentials) => {
                     'Add Department',
                     'Remove Department',
                     new inquirer.Separator(`\n==== Other ====`),
+                    'List Team by Manager',
                     'Generate Utilized Budget Report'
                 ]}).then((answer) => {
+                    console.log(answer)
                     selectionRouting(answer);
                 });
         }
