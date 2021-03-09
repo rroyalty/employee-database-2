@@ -1,3 +1,4 @@
+// Modules and Variables.
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const config = require('./config/config.json');
@@ -15,7 +16,7 @@ const compareHash = (param, hash) => {
 }})}
 
 
-// Login
+// Input Credentials
 const access = async () => {
     return await inquirer
         .prompt([
@@ -34,10 +35,12 @@ const access = async () => {
             })
 };
 
+// Compare Credentials
 access().then((credentials) => {
     compareHash(`username`, credentials.username);
     compareHash(`password`, credentials.password);
 
+    // MySQL Connection.
     const connection = mysql.createConnection({
         host: 'localhost',
         port: 3306,
@@ -46,12 +49,14 @@ access().then((credentials) => {
         database: 'employee-database',
     });
 
+    // Connect to MySQL
     connection.connect((err) => {
         if (err) throw err;
         console.log("connection to database successful.\n");
         generalMenu();
     });
 
+    // View any table in the Database, pulls SQL query from templates.js
     const viewDB = (param) => {
         let query = templates.View[param];
         connection.query(query, (err, res) => {
@@ -61,6 +66,7 @@ access().then((credentials) => {
         })
     }
 
+    // Routing for adding an entry to a table in the database.
     const addDBSetUp = (param) => {
         const paramList = [];
         switch(param) {
@@ -83,6 +89,7 @@ access().then((credentials) => {
         }
     }
 
+    // Adds an entry to a table in the database.
     const addDB = (param, list) => {
         if (list !== undefined && list.length > 0) templates.QuestionList[param][0].choices = list;
         inquirer.prompt(templates.QuestionList[param]).then((answer) => {
@@ -107,6 +114,7 @@ access().then((credentials) => {
         })
     }
 
+    // Remove an entry from the database.
     const removeDB = (param) => {
         let select = param;
         switch (param) {
@@ -135,6 +143,7 @@ access().then((credentials) => {
         })
     }
 
+    // Change an Employee role.
     const changeRole = () => {
         connection.query(`SELECT CONCAT(first_name, " " , last_name) AS Employee FROM employee`, (err, res) => {
             if (err) throw err;
@@ -175,6 +184,7 @@ access().then((credentials) => {
         })
     }
 
+    // Assign a team to a specific manager.
     const assignManager = () => {
         connection.query(`SELECT CONCAT(first_name, " " , last_name) AS Manager FROM employee WHERE isManager = ?`, 1, (err, res) => {
             if (err) throw err;
@@ -227,6 +237,7 @@ access().then((credentials) => {
         }})
     }
 
+    // Promote an Employee to manager.
     makeManager = () => {
         connection.query(`SELECT CONCAT(first_name, " " , last_name) AS Employee FROM Employee WHERE isManager = ? AND ids_manager IS NULL`, 0, (err, res) => {
             if (err) throw err;
@@ -261,6 +272,7 @@ access().then((credentials) => {
         });
     }
 
+    // Revoke Manager status from an employee.
     revokeManager = () => {
         connection.query(`SELECT CONCAT(first_name, " " , last_name) AS Employee FROM Employee WHERE isManager = ?`, 1, (err, res) => {
             if (err) throw err;
@@ -295,6 +307,7 @@ access().then((credentials) => {
         });
     }
 
+    // View a list of employee based on a selected manager.
     teamList = () => {
         connection.query(`SELECT CONCAT(first_name, " " , last_name) AS Employee FROM Employee WHERE isManager = ?`, 1, (err, res) => {
             if (err) throw err;
@@ -326,6 +339,7 @@ access().then((credentials) => {
         })
     }
 
+    // Generate an expense summary by department.
     const generateExpense = () => {
         connection.query(`SELECT Department FROM Department`, 1, (err, res) => {
             if (err) throw err;
@@ -353,6 +367,7 @@ access().then((credentials) => {
         })
     }
 
+    // General Menu Selection Routing.
     const selectionRouting = (answer) => {
         const split = answer.selection.split(" ");
 

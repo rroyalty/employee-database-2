@@ -4,6 +4,8 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 let credentials = {};
 
+
+// Generate Hash for Username and Password
 const generateHash = (username, password) => {
 
     bcrypt.hash(username, 10, function(err, hash) {
@@ -20,6 +22,8 @@ const generateHash = (username, password) => {
     });
 }
 
+
+// Input your username and password to be converted to hash.
 const inputCredentials = () => {
     inquirer
         .prompt([
