@@ -9,7 +9,7 @@ const templates = {
                     {
                         type: 'list',
                         name: 'id_role',
-                        message: 'What is role is your employee going to fill?',
+                        message: 'What role is your employee going to fill?',
                         pageSize: 8,
                         choices: "" 
                     },

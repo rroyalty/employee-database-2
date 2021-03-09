@@ -5,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const templates = require('./templates/templates');
-const { QuestionList } = require('./templates/templates');
 
 // Compare login credentials to stored config file.
 const compareHash = (param, hash) => {
@@ -82,8 +81,8 @@ access().then((credentials) => {
     }
 
     const addDB = (param, list) => {
-        if (list !== undefined || list.length > 0) QuestionList[param][0].choices = list;
-        inquirer.prompt(QuestionList[param]).then((answer) => {
+        if (list !== undefined && list.length > 0) templates.QuestionList[param][0].choices = list;
+        inquirer.prompt(templates.QuestionList[param]).then((answer) => {
             const firstKey = Object.keys(answer)[0].split("_")
             if ( firstKey[0] === "id" ) {
                 connection.query(`SELECT id FROM ${firstKey[1]} WHERE ${firstKey[1]} = ?`, Object.values(answer)[0], (err, res) => {
@@ -105,11 +104,11 @@ access().then((credentials) => {
         switch (param) {
             case 'Employee':
                 select = `CONCAT(first_name, " " , last_name)`;
-            break
+            break;
         }
         connection.query(`SELECT ${select} AS ${param} FROM ${param}`, (err, res) => {
             const columnMap = res.map((ele) => ele[param]);
-            console.log(`==================================================================\nBe Careful! Deleting entries will cascade to related tables!!\n==================================================================\n`);
+            console.log(`==================================================================\nBe Careful! Deleting entries will cascade to related tables!!\n(Department => Roles => Employees)\n==================================================================\n`);
             inquirer
                 .prompt({
                     pageSize: 5,
@@ -160,7 +159,7 @@ access().then((credentials) => {
                     'Assign to Manager',
                     new inquirer.Separator(`--------`),
                     'Make Employee a Manager',
-                    'Remove Manager Status',
+                    'Revoke Manager Status',
                     new inquirer.Separator(`\n==== Roles ====`),
                     'View Role',
                     'Add Role',
@@ -169,8 +168,8 @@ access().then((credentials) => {
                     'View Department',
                     'Add Department',
                     'Remove Department',
-                    // new inquirer.Separator(`---- Other ----`),
-                    // 'View Utilized Budget'
+                    new inquirer.Separator(`\n==== Other ====`),
+                    'Generate Utilized Budget Report'
                 ]}).then((answer) => {
                     selectionRouting(answer);
                 });
