@@ -60,7 +60,6 @@ Technologies Used:
 [NPM](https://www.npmjs.com/)  
 [Inquirer](https://www.npmjs.com/package/inquirer)  
 [MySQL](https://www.npmjs.com/package/mysql)  
-[UUID](https://www.npmjs.com/package/uuid)  
 [TablePlus](https://tableplus.com/)  
 
 ---
