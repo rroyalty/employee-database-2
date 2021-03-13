@@ -356,7 +356,7 @@ access().then((credentials) => {
                         connection.query(`SELECT id FROM Department WHERE Department = ?`, department, (err, res) => {
                             if (err) throw err;
                                 const departmentID = res[0].id;
-                                connection.query(`SELECT D.Department, SUM(R.Salary) AS Budget FROM department AS D LEFT JOIN role AS R ON D.id = R.id_department`, (err, res) => {
+                                connection.query(`SELECT D.Department, SUM(R.Salary) AS Budget FROM employee AS E LEFT JOIN role AS R on E.id_role =  R.id LEFT JOIN department AS D on R.id_department = D.id WHERE D.id = ? GROUP BY D.id `, departmentID, (err, res) => {
                                     if (err) throw err;
                                     console.table(res);
                                     generalMenu();
