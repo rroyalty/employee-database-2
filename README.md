@@ -1,4 +1,4 @@
-# Emlpoyee Database
+# Employee Database
 
 ## Table of Contents  
 
