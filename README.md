@@ -1,4 +1,4 @@
-# Note Taker 
+# Emlpoyee Database
 
 ## Table of Contents  
 
@@ -17,7 +17,7 @@
 
 This app is uses node and MySQL to manage a database containing 3 tables; Departments, Roles, and Employees. Through the CLI, the user is allowed to Add/View/Remove Employees, Departments, and Roles, in addition to being able to create teams of employees operating under employees flagged as managers, and generate expense reports for the department table.
 
-[Screenshot](./assets/employee-database.jpg)
+![Screenshot](./assets/employee-database.jpg)
 
 
 ---
