@@ -24,15 +24,15 @@ This app is uses node and MySQL to manage a database containing 3 tables; Depart
 <a name="Installation"></a>
 ### Installation 
 
-This application is deployed on Heroku.  
-[unh-note-taker-rr](https://unh-note-taker-rr.herokuapp.com/)  
-
 To install the application locally:  
 1.  Clone the Repository to your local device.  
-2.  Using your Terminal, install nodemon in the repository. `npm install --save-dev nodemon`.  
-3.  Using your Terminal, run `npm install` in the directory of the cloned repository.  
-4.  After installing packages, run `nodemon server`.  
-5.  Navigate to [localhost3000](http://localhost:3000/) in your web browser.
+2.  Using your Terminal, run `npm install` in the directory of the cloned repository.  
+3.  Install TablePlus or comparable SQL client.  
+4.  Import `employee-database.sql` into your database.  
+5.  From the `config` folder, type `node encrypt`  
+6.  Input your database credentials.  
+7.  From the root folder, run `node index`.
+8.  Follow prompts.
 
 ---
 <a name="Usage"></a>
@@ -46,7 +46,6 @@ Feel free to use this program in whichever way you see fit.
 
 [License](./LICENSE)
 
-
 ---
 <a name="Contributing"></a>
 ### Contributing
@@ -59,9 +58,10 @@ Bootcamp TA:
 
 Technologies Used:  
 [NPM](https://www.npmjs.com/)  
-[Heroku](www.heroku.com)  
-[Nodemon](https://www.npmjs.com/package/nodemon)  
+[Inquirer](https://www.npmjs.com/package/inquirer)  
+[MySQL](https://www.npmjs.com/package/mysql)  
 [UUID](https://www.npmjs.com/package/uuid)  
+[TablePlus](https://tableplus.com/)  
 
 ---
 <a name="Questions"></a>
